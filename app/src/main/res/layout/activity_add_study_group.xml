@@ -1,24 +1,78 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
-    android:gravity="center"
+
+
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent" >
 
+    <LinearLayout
+        android:id="@+id/createform"
+        android:orientation="vertical"
+        android:gravity="center"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
-    <EditText
-        android:id="@+id/joinemail"
-        android:layout_width="320dp"
-        android:layout_height="50dp"
-        android:inputType="textEmailAddress"
-        android:hint="그룹 이름"
-        android:background="@color/white"
-        android:layout_margin="10dp" />
-    <NumberPicker
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
-    </NumberPicker>
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:text="그룹 생성"
+            android:textSize="30dp"
+            android:layout_margin="5dp"
+            >
 
+        </TextView>
 
+        <EditText
+            android:id="@+id/subject"
+            android:layout_width="320dp"
+            android:layout_height="50dp"
+            android:inputType="textEmailAddress"
+            android:hint="그룹 이름"
+            android:background="@color/white"
+            android:layout_margin="10dp" />
 
-</LinearLayout>
+        <EditText
+            android:id="@+id/comment"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:lines="5"
+            android:hint="그룹을 소개해주세요"
+            android:inputType="textMultiLine"
+            android:scrollHorizontally="false"
+            android:minWidth="320.0dip"
+            android:maxWidth="5.0dip"
+            android:layout_marginTop="5dp"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="5dp"/>
+
+        <NumberPicker
+            android:id="@+id/numberpicker"
+            android:layout_width="wrap_content"
+            android:layout_height="70dp"></NumberPicker>
+
+        <TimePicker
+            android:id="@+id/timepicker"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:timePickerMode="spinner"
+            ></TimePicker>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <Button
+                android:id="@+id/addgroup"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="50dp"
+                android:layout_marginRight="50dp"
+                android:text="그룹 생성"
+                android:enabled="false"
+                ></Button>
+
+        </LinearLayout>
+
+    </LinearLayout>
+</ScrollView>
+

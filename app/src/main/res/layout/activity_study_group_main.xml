@@ -35,11 +35,13 @@
     </LinearLayout>
 
     <Button
+        android:id="@+id/createGroup"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_weight="1"
         android:text="그룹 생성"></Button>
     <Button
+        android:id="@+id/exitGroup"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_weight="1"
