@@ -15,4 +15,5 @@ import lombok.ToString;
 public class JsonDto {
     private int httpCode;
     private String json;
+    private String token;
 }

@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical"
     android:layout_margin="20dp"
     android:layout_width="match_parent"
@@ -12,11 +13,14 @@
     </TextView>
 
     <LinearLayout
+        android:id="@+id/groupList"
+        android:orientation="vertical"
         android:gravity="center"
         android:layout_weight="8"
         android:layout_width="match_parent"
         android:layout_margin="5dp"
-        android:padding="5dp" android:layout_height="wrap_content">
+        android:padding="5dp"
+        android:layout_height="wrap_content">
     </LinearLayout>
 
     <TextView
@@ -25,13 +29,14 @@
         android:text="나의 달성률">
     </TextView>
     <LinearLayout
+        android:id="@+id/mygoal"
         android:gravity="center"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="5dp"
         android:padding="5dp"
         android:layout_weight="5"
-        >
+        android:orientation="vertical">
     </LinearLayout>
 
     <Button
@@ -41,9 +46,9 @@
         android:layout_weight="1"
         android:text="그룹 생성"></Button>
     <Button
-        android:id="@+id/exitGroup"
+        android:id="@+id/joinGroup"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_weight="1"
-        android:text="그룹 탈퇴"></Button>
+        android:text="그룹 참가"></Button>
 </LinearLayout>

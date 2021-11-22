@@ -36,6 +36,7 @@ import javax.net.ssl.HttpsURLConnection;
 
 import lombok.SneakyThrows;
 
+//activity_member_join
 public class MemberJoinActivity extends AppCompatActivity {
 
     private Button joinMember;
@@ -45,7 +46,7 @@ public class MemberJoinActivity extends AppCompatActivity {
     private EditText confirmPassword;
 
     private String json;
-    private String server_url = "http://15.165.219.73:8080/api/all/join/";
+    private String server_url = "http://15.165.219.73:2000/api/all/join/";
     private HttpURLConnection conn;
 
     private OutputStream os;
@@ -58,7 +59,7 @@ public class MemberJoinActivity extends AppCompatActivity {
 
         joinMember = (Button) findViewById(R.id.joinmember);
         joinMember.setOnClickListener(new View.OnClickListener() {
-            @SneakyThrows
+
             @Override
             public void onClick(View v) {
                 username = (EditText) findViewById(R.id.joinusername);
@@ -70,30 +71,46 @@ public class MemberJoinActivity extends AppCompatActivity {
                 TextView confirm = (TextView) findViewById(R.id.test);
 
                 if(username.getText().toString().equals("") | email.getText().toString().equals("") | password.getText().toString().equals("") | confirmPassword.getText().equals("")){
-                    Toast.makeText(getApplicationContext(), "채워지지 않은 값이 존재합니다.", Toast.LENGTH_LONG).show();
+                    Toast.makeText(getApplicationContext(), "채워지는 값이 유효하지 않습니다.", Toast.LENGTH_LONG).show();
                 }else{
                     if (confirmPassword.getText().toString().equals(password.getText().toString()) & username.getText().toString().length() > 7 & username.getText().toString().length() < 20) {
                         try {
+
                             jsonObject.put("username", username.getText());
                             jsonObject.put("email", email.getText());
                             jsonObject.put("password", password.getText());
                         } catch (JSONException e) {
+
                             e.printStackTrace();
+
                         }
 
                         json = jsonObject.toString();
+                        JsonDto jsonDto = null;
+                        try {
+                            jsonDto = new HttpUtil().execute(server_url, json, null).get();
+                        } catch (ExecutionException e) {
+                            e.printStackTrace();
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
 
-                        JsonDto jsonDto = new HttpUtil().execute(server_url,json).get();
-
-                        if(jsonDto.getHttpCode() != HttpsURLConnection.HTTP_OK){
-                            JSONObject parsing = new JSONObject(jsonDto.getJson());
-                            String errorField = parsing.getString("errorField");
-                            String errorMessages = parsing.getString("errorMessages");
-                            confirm.setText(errorField + " : " + errorMessages);
-                        }else{
+                        if (jsonDto.getHttpCode() != HttpsURLConnection.HTTP_OK) {
+                            JSONObject parsing = null;
+                            try {
+                                parsing = new JSONObject(jsonDto.getJson());
+                                String errorField = parsing.getString("errorField");
+                                String errorMessages = parsing.getString("errorMessages");
+                                confirm.setText(errorField + " : " + errorMessages);
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+                        } else {
                             Intent intent = new Intent(getApplicationContext(), MainActivity.class);
                             startActivity(intent);
                         }
+                    }else{
+                        Toast.makeText(getApplicationContext(), "채워지는 값이 유효하지 않습니다.", Toast.LENGTH_LONG).show();
                     }
                 }
             }

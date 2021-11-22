@@ -1,5 +1,6 @@
 package com.example.myapplication.dao;
 
+
 import android.os.AsyncTask;
 import android.util.Log;
 
@@ -12,7 +13,7 @@ import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
-public class HttpUtil extends AsyncTask<String, String, JsonDto> {
+public class HttpUtilNoReturn extends AsyncTask<String, String, JsonDto> {
     @Override
     protected JsonDto doInBackground(String... params) {
         try {
@@ -42,24 +43,13 @@ public class HttpUtil extends AsyncTask<String, String, JsonDto> {
 
 
 
-            InputStream is = conn.getInputStream();
-            BufferedReader br = new BufferedReader(new InputStreamReader(is));
-            String line;
-            StringBuffer response = new StringBuffer();
-            while((line = br.readLine()) != null) {
-                response.append(line);
-                response.append(' ');
-            }
-            br.close();
 
-
-            String res = response.toString();
             JsonDto jsonInfo ;
 
             if(conn.getHeaderField("Authorization")!=null){
-                jsonInfo = new JsonDto(code, res, conn.getHeaderField("Authorization"));
+                jsonInfo = new JsonDto(code, "NoReturn", conn.getHeaderField("Authorization"));
             }else{
-                jsonInfo = new JsonDto(code, res, null);
+                jsonInfo = new JsonDto(code, "NoReturn", null);
             }
             return jsonInfo;
 

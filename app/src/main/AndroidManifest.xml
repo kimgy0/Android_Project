@@ -24,6 +24,8 @@
         </activity>
         <activity android:name=".MemberJoinActivity" />
         <activity android:name=".StudyGroupMain" />
+        <activity android:name=".WriteGroupInfo" />
+        <activity android:name=".JoinStudyGroup" />
     </application>
 
 </manifest>

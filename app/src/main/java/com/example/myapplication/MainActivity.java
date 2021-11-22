@@ -8,6 +8,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.myapplication.dao.HttpUtil;
 import com.example.myapplication.dto.json.JsonDto;
@@ -16,8 +17,10 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.net.HttpURLConnection;
+import java.util.Locale;
 import java.util.concurrent.ExecutionException;
 
+//activity_main
 public class MainActivity extends AppCompatActivity {
 
     private TextView regText;
@@ -28,7 +31,7 @@ public class MainActivity extends AppCompatActivity {
 
     JSONObject jsonObject = new JSONObject();
     private String json;
-    private String server_url = "http://15.165.219.73:8080/login";
+    private String server_url = "http://15.165.219.73:2000/login";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,24 +49,31 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 JSONObject jsonObject = new JSONObject();
                 try {
-                    jsonObject.put("username", username.getText());
-                    jsonObject.put("password", password.getText());
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-
-                json = jsonObject.toString();
-                try {
-                    JsonDto jsonDto = new HttpUtil().execute(server_url, json).get();
-                    if(jsonDto.getHttpCode() != HttpURLConnection.HTTP_OK){
-                        errorText.setText("not matching id or password");
+                    jsonObject.put("username", username.getText().toString());
+                    jsonObject.put("password", password.getText().toString());
+                    if(username.getText().toString().equals("") | password.getText().toString().equals("")){
+                        Toast.makeText(getApplicationContext(), "빈칸이 존재합니다.", Toast.LENGTH_LONG).show();
                     }else{
-                        Intent intent = new Intent(getApplicationContext(), StudyGroupMain.class);
-                        startActivity(intent);
+                        json = jsonObject.toString();
+                        try {
+                            JsonDto jsonDto = new HttpUtil().execute(server_url, json, null).get();
+                            if(jsonDto.getHttpCode() != HttpURLConnection.HTTP_OK){
+                                errorText.setText("not matching id or password");
+                            }else{
+                                Intent intent = new Intent(getApplicationContext(), StudyGroupMain.class);
+                                intent.putExtra("token",jsonDto.getToken());
+                                startActivity(intent);
+                            }
+                        } catch (ExecutionException e) {
+                            errorText.setText("not matching id or password");
+                            e.printStackTrace();
+                        } catch (InterruptedException e) {
+                            errorText.setText("not matching id or password");
+                            e.printStackTrace();
+                        }
                     }
-                } catch (ExecutionException e) {
-                    e.printStackTrace();
-                } catch (InterruptedException e) {
+
+                } catch (JSONException e) {
                     e.printStackTrace();
                 }
             }

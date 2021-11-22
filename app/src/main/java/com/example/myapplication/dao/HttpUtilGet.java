@@ -12,7 +12,7 @@ import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
-public class HttpUtil extends AsyncTask<String, String, JsonDto> {
+public class HttpUtilGet extends AsyncTask<String, String, JsonDto> {
     @Override
     protected JsonDto doInBackground(String... params) {
         try {
@@ -20,26 +20,20 @@ public class HttpUtil extends AsyncTask<String, String, JsonDto> {
             URL obj = new URL(url);
             HttpURLConnection conn = (HttpURLConnection) obj.openConnection();
 
+            conn.setConnectTimeout(10000);
             conn.setReadTimeout(1000);
             conn.setConnectTimeout(1500);
-            conn.setRequestMethod("POST");
+            conn.setRequestMethod("GET");
             conn.setDoInput(true);
             conn.setDoOutput(true);
             conn.setRequestProperty("Content-Type","application/json");
-            conn.setRequestProperty("Authorization",params[2]);
-
-
-            Log.d("param = ",params[1]);
-            byte[] outputInBytes = params[1].getBytes("UTF-8");
-            OutputStream os = conn.getOutputStream();
-            os.write( outputInBytes );
-            os.close();
+            conn.setRequestProperty("Authorization",params[1]);
+            conn.connect();
 
             int code = conn.getResponseCode();
             if (conn.getResponseCode() != HttpURLConnection.HTTP_OK) {
                 throw new RuntimeException("Failed : HTTP error code : " + conn.getResponseCode());
             }
-
 
 
             InputStream is = conn.getInputStream();
@@ -52,15 +46,11 @@ public class HttpUtil extends AsyncTask<String, String, JsonDto> {
             }
             br.close();
 
-
             String res = response.toString();
             JsonDto jsonInfo ;
 
-            if(conn.getHeaderField("Authorization")!=null){
-                jsonInfo = new JsonDto(code, res, conn.getHeaderField("Authorization"));
-            }else{
-                jsonInfo = new JsonDto(code, res, null);
-            }
+
+            jsonInfo = new JsonDto(code, res, conn.getHeaderField("Authorization"));
             return jsonInfo;
 
         } catch (Exception e) {

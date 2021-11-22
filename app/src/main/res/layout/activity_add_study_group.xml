@@ -17,9 +17,7 @@
             android:layout_height="match_parent"
             android:text="그룹 생성"
             android:textSize="30dp"
-            android:layout_margin="5dp"
-            >
-
+            android:layout_margin="5dp">
         </TextView>
 
         <EditText
@@ -45,33 +43,66 @@
             android:layout_marginLeft="5dp"
             android:layout_marginRight="5dp"/>
 
-        <NumberPicker
-            android:id="@+id/numberpicker"
-            android:layout_width="wrap_content"
-            android:layout_height="70dp"></NumberPicker>
+        <LinearLayout
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:id="@+id/timepickerLayout"
+            android:layout_width="match_parent"
+            android:layout_height="270dp"
+            android:orientation="vertical">
 
-        <TimePicker
-            android:id="@+id/timepicker"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:timePickerMode="spinner"
-            ></TimePicker>
+            <TimePicker
+                android:id="@+id/time_picker"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:timePickerMode="spinner">
+            </TimePicker>
+            <Button
+                android:id="@+id/time_picker_add"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="추가"></Button>
+        </LinearLayout>
+
 
         <LinearLayout
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:id="@+id/timeLayout"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="100dp"
+            android:orientation="vertical">
+            <TextView
+                android:id="@+id/commentTime"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="시간을 선택해주세요.">
+            </TextView>
+            <TextView
+                android:id="@+id/timeText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="">
+            </TextView>
 
-            <Button
+        </LinearLayout>
+
+        <TextView
+                android:id="@+id/error"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:text=""
+                android:textColor="#ff0000"
+                android:layout_gravity="center"></TextView>
+
+        <Button
                 android:id="@+id/addgroup"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="50dp"
                 android:layout_marginRight="50dp"
-                android:text="그룹 생성"
-                android:enabled="false"
-                ></Button>
-
-        </LinearLayout>
+                android:text="그룹 생성"></Button>
 
     </LinearLayout>
 </ScrollView>
