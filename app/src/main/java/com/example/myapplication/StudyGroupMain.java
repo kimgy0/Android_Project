@@ -28,19 +28,15 @@ import javax.net.ssl.HttpsURLConnection;
 
 //activity_study_group_main
 public class StudyGroupMain extends AppCompatActivity {
-    String server_url = "http://15.165.219.73:2000/api/user/printGroups";
-    Button createGroup;
-    Button joinGroup;
+    private String server_url = "http://15.165.219.73:2000/api/user/printGroups";
+    private Button createGroup;
+    private Button joinGroup;
     JsonDto jsonDto;
-    JSONObject jsonObject = new JSONObject();
     JSONObject parsing;
-    JSONArray data;
-    LinearLayout linearLayout;
-    LinearLayout linearLayoutGoal;
-    TextView groupName;
-    TextView goal;
-    int absent;
-    int tardy;
+    private JSONObject jsonObject = new JSONObject();
+    private JSONArray data;
+    private int absent;
+    private int tardy;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -80,7 +76,7 @@ public class StudyGroupMain extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getApplicationContext(), WriteGroupInfo.class);
-                intent.putExtra("token",getIntent().getStringExtra("token"));
+                intent.putExtra("token",jsonDto.getToken());
                 startActivity(intent);
             }
         });
@@ -89,8 +85,8 @@ public class StudyGroupMain extends AppCompatActivity {
         joinGroup.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(getApplicationContext(), WriteGroupInfo.class);
-                intent.putExtra("token",getIntent().getStringExtra("token"));
+                Intent intent = new Intent(getApplicationContext(), JoinStudyGroup.class);
+                intent.putExtra("token",jsonDto.getToken());
                 startActivity(intent);
             }
         });

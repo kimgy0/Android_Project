@@ -116,6 +116,8 @@ public class WriteGroupInfo extends AppCompatActivity {
                             JsonDto jsonDto = new HttpUtil().execute(server_url, json,getIntent().getStringExtra("token")).get();
                             Toast.makeText(getApplicationContext(), json, Toast.LENGTH_LONG).show();
                             Toast.makeText(getApplicationContext(), jsonDto.getHttpCode() + jsonDto.getToken(), Toast.LENGTH_LONG).show();
+
+
                             if(jsonDto.getHttpCode() != HttpsURLConnection.HTTP_OK){
                                 JSONObject parsing = new JSONObject(jsonDto.getJson());
                                 String errorField = parsing.getString("errorField");
@@ -125,7 +127,9 @@ public class WriteGroupInfo extends AppCompatActivity {
 
 
                                 Toast.makeText(getApplicationContext(),"정상통과" , Toast.LENGTH_LONG).show();
-
+                                Intent intent = new Intent(getApplicationContext(),StudyGroupMain.class);
+                                intent.putExtra("token",jsonDto.getToken());
+                                startActivity(intent);
 
 
                             }
