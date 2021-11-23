@@ -70,8 +70,8 @@ public class MemberJoinActivity extends AppCompatActivity {
                 conn = null;
                 TextView confirm = (TextView) findViewById(R.id.test);
 
-                if(username.getText().toString().equals("") | email.getText().toString().equals("") | password.getText().toString().equals("") | confirmPassword.getText().equals("")){
-                    Toast.makeText(getApplicationContext(), "채워지는 값이 유효하지 않습니다.", Toast.LENGTH_LONG).show();
+                if(username.getText().toString().length()==0 | email.getText().toString().length()==0 | password.getText().toString().length()==0 | confirmPassword.getText().toString().length()==0){
+                    Toast.makeText(getApplicationContext(), "빈칸이 존재합니다.", Toast.LENGTH_LONG).show();
                 }else{
                     if (confirmPassword.getText().toString().equals(password.getText().toString()) & username.getText().toString().length() > 7 & username.getText().toString().length() < 20) {
                         try {

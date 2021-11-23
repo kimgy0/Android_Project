@@ -26,6 +26,7 @@
         <activity android:name=".StudyGroupMain" />
         <activity android:name=".WriteGroupInfo" />
         <activity android:name=".JoinStudyGroup" />
+        <activity android:name=".StudyGroup" />
     </application>
 
 </manifest>
