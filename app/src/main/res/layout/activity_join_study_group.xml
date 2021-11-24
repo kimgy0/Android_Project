@@ -8,7 +8,7 @@
 
     <ImageView
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="360dp"
         android:baselineAligned="false"
         android:src="@drawable/tree"></ImageView>
 
@@ -34,6 +34,8 @@
         android:id="@+id/inviteButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:backgroundTint="#90EE90"
+        android:textColor="#0a3711"
         android:layout_gravity="right"
         android:layout_marginRight="55dp"
         android:text="방에 참여하기"></Button>

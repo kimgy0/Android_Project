@@ -62,8 +62,6 @@ public class WriteGroupInfo extends AppCompatActivity {
         comment = findViewById(R.id.comment);
 
         timePicker.setIs24HourView(true);
-
-
         addTimeButton.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v) {
@@ -133,6 +131,8 @@ public class WriteGroupInfo extends AppCompatActivity {
                 }
             }
         });
+
+
     }
 
 }

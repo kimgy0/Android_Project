@@ -1,7 +1,139 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_gravity="center"
+    android:gravity="center"
+    android:orientation="vertical"
+    android:padding="10dp"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
+    <TextView
+        android:id="@+id/in_groupName"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="그룹"
+        android:layout_marginLeft="20dp"
+        android:textSize="40dp">
+    </TextView>
+    <TextView
+        android:id="@+id/in_groupComment"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="15dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginLeft="20dp"
+        android:text="그룹에 대한 설명이 들어갈 공간">
+    </TextView>
+
+    <LinearLayout
+        android:layout_weight="3"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="그룹원 목록"
+            android:layout_marginTop="10dp"
+            android:layout_marginLeft="20dp"
+            android:padding="10dp">
+        </TextView>
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="15dp"
+            android:layout_marginBottom="15dp"
+            android:padding="10dp"
+            android:background="@drawable/customborder">
+            <LinearLayout
+                android:id="@+id/in_groupMemberList"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:orientation="vertical"
+                android:layout_gravity="center">
+            </LinearLayout>
+        </ScrollView>
+    </LinearLayout>
+    <LinearLayout
+        android:layout_weight="1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+        <Button
+            android:layout_marginLeft="25dp"
+            android:layout_marginRight="25dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:backgroundTint="#90EE90"
+            android:textColor="#0a3711"
+            android:text="인증샷 하러가기">
+        </Button>
+        <LinearLayout
+            android:layout_weight="8"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="15dp"
+            android:layout_marginBottom="15dp"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="15dp"
+            android:orientation="vertical"
+            android:gravity="center"
+            android:background="@drawable/customborder">
+            <TextView
+                android:id="@+id/in_groupAbsentCount"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="10dp"
+                android:layout_gravity="center"
+                android:text="인증횟수는 몇회입니다.">
+            </TextView>
+            <TextView
+                android:id="@+id/in_goToImages"
+                android:layout_width="wrap_content"
+                android:layout_marginTop="25dp"
+                android:layout_height="wrap_content"
+                android:textSize="15dp"
+                android:layout_gravity="center"
+                android:text="@string/pictureInquire">
+            </TextView>
+        </LinearLayout>
+
+    </LinearLayout>
+    <LinearLayout
+        android:layout_weight="1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+<!--        <TextView-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:backgroundTint="#90EE90"-->
+<!--            android:textColor="#0a3711"-->
+<!--            android:text="그룹수정은 방장만 할 수 있어요."-->
+<!--            android:gravity="center"-->
+<!--            android:layout_marginLeft="20dp">-->
+<!--        </TextView>-->
+        <Button
+            android:layout_marginLeft="25dp"
+            android:layout_marginRight="25dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="그룹 수정"
+            android:enabled="false"
+            >
+        </Button>
+        <Button
+            android:layout_marginLeft="25dp"
+            android:layout_marginRight="25dp"
+            android:backgroundTint="#90EE90"
+            android:textColor="#0a3711"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="탈퇴하기">
+        </Button>
+    </LinearLayout>
 
 
 

@@ -57,6 +57,7 @@ public class MainActivity extends AppCompatActivity {
                         json = jsonObject.toString();
                         try {
                             JsonDto jsonDto = new HttpUtil().execute(server_url, json, null).get();
+
                             if(jsonDto.getHttpCode() != HttpURLConnection.HTTP_OK){
                                 errorText.setText("not matching id or password");
                             }else{

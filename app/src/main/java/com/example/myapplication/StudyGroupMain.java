@@ -53,7 +53,6 @@ public class StudyGroupMain extends AppCompatActivity {
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_study_group_main);
-
         myGoal = findViewById(R.id.mygoal);
         myGroup = findViewById(R.id.groupList);
         absent = 0;
@@ -62,8 +61,8 @@ public class StudyGroupMain extends AppCompatActivity {
 
 
         try {
+            Toast.makeText(getApplicationContext(), server_url+getIntent().getStringExtra("token"), Toast.LENGTH_LONG).show();
             jsonDto = new HttpUtilGet().execute(server_url, getIntent().getStringExtra("token")).get();
-
             if ((int) jsonDto.getHttpCode() != HttpsURLConnection.HTTP_OK) {
                 parsing = new JSONObject(jsonDto.getJson());
                 String errorField = parsing.getString("errorField");
@@ -134,6 +133,7 @@ public class StudyGroupMain extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+
     }
 
     public void addTextView(String a,LinearLayout l, String key){
@@ -147,7 +147,6 @@ public class StudyGroupMain extends AppCompatActivity {
                     Intent intent = new Intent(getApplicationContext(), StudyGroup.class);
                     intent.putExtra("token",jsonDto.getToken());
                     intent.putExtra("key",key);
-                    Toast.makeText(getApplicationContext(), "검증"+key+jsonDto.toString(), Toast.LENGTH_LONG).show();
                     startActivity(intent);
                 }
             });
@@ -156,6 +155,7 @@ public class StudyGroupMain extends AppCompatActivity {
         LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         lp.gravity = Gravity.CENTER;
         view.setLayoutParams(lp);
+        view.setGravity(Gravity.CENTER);
 
         if(l != null){
             l.addView(view);

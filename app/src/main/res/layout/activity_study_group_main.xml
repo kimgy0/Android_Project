@@ -43,11 +43,15 @@
         android:id="@+id/createGroup"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:backgroundTint="#90EE90"
+        android:textColor="#0a3711"
         android:layout_weight="1"
         android:text="그룹 생성"></Button>
     <Button
         android:id="@+id/joinGroup"
         android:layout_width="match_parent"
+        android:backgroundTint="#90EE90"
+        android:textColor="#0a3711"
         android:layout_height="wrap_content"
         android:layout_weight="1"
         android:text="그룹 참가"></Button>

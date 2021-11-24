@@ -1,14 +1,12 @@
 package com.example.myapplication.dao;
 
 import android.os.AsyncTask;
-import android.util.Log;
 
 import com.example.myapplication.dto.json.JsonDto;
 
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
@@ -32,7 +30,7 @@ public class HttpUtilGet extends AsyncTask<String, String, JsonDto> {
 
             int code = conn.getResponseCode();
             if (conn.getResponseCode() != HttpURLConnection.HTTP_OK) {
-                throw new RuntimeException("Failed : HTTP error code : " + conn.getResponseCode());
+                throw new RuntimeException("Failed : HTTP error code : " + conn.getResponseCode() + conn.getRequestMethod());
             }
 
 

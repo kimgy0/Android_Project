@@ -28,8 +28,6 @@ public class HttpUtil extends AsyncTask<String, String, JsonDto> {
             conn.setRequestProperty("Content-Type","application/json");
             conn.setRequestProperty("Authorization",params[2]);
 
-
-            Log.d("param = ",params[1]);
             byte[] outputInBytes = params[1].getBytes("UTF-8");
             OutputStream os = conn.getOutputStream();
             os.write( outputInBytes );
@@ -37,10 +35,8 @@ public class HttpUtil extends AsyncTask<String, String, JsonDto> {
 
             int code = conn.getResponseCode();
             if (conn.getResponseCode() != HttpURLConnection.HTTP_OK) {
-                throw new RuntimeException("Failed : HTTP error code : " + conn.getResponseCode());
+                throw new RuntimeException("Failed : HTTP error code : " + conn.getResponseCode() +params[1]+params[2]);
             }
-
-
 
             InputStream is = conn.getInputStream();
             BufferedReader br = new BufferedReader(new InputStreamReader(is));
@@ -55,6 +51,7 @@ public class HttpUtil extends AsyncTask<String, String, JsonDto> {
 
             String res = response.toString();
             JsonDto jsonInfo ;
+
 
             if(conn.getHeaderField("Authorization")!=null){
                 jsonInfo = new JsonDto(code, res, conn.getHeaderField("Authorization"));
