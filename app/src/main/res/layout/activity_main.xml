@@ -9,12 +9,52 @@
     tools:context=".MainActivity"
     android:gravity="center">
 
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="우리만의 그룹 스터디"
+        android:gravity="center"
+        android:elevation="20dp"
+        android:textColor="#007f2f"
+        android:textSize="20dp"
+        android:textStyle="bold"
+        android:layout_gravity="center">
+
+    </TextView>
+
+    <FrameLayout
+        android:orientation="horizontal"
+
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <ImageView
+            android:layout_width="168dp"
+            android:layout_height="180dp"
+            android:layout_gravity="left"
+            android:layout_marginLeft="90dp"
+
+            android:src="@drawable/book"></ImageView>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginLeft="50dp"
+            android:text="그:숲"
+            android:elevation="20dp"
+            android:textColor="#007f2f"
+            android:textStyle="bold"
+            android:textSize="60dp">
+
+        </TextView>
+    </FrameLayout>
     <EditText
         android:id="@+id/username"
         android:layout_width="320dp"
         android:layout_height="50dp"
         android:background="@color/white"
-        android:hint="아이디"
+        android:hint="  아이디"
+        android:elevation="20dp"
         android:layout_margin="10dp"
         tools:ignore="MissingConstraints"
         />
@@ -23,20 +63,22 @@
         android:id="@+id/password"
         android:layout_width="320dp"
         android:layout_height="50dp"
+        android:elevation="20dp"
         android:inputType="textPassword"
-        android:hint="비밀번호"
+        android:hint="  비밀번호"
         android:background="@color/white"
         android:layout_margin="10dp"
         tools:ignore="MissingConstraints" />
 
     <Button
         android:id="@+id/login"
+
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="10dp"
         android:backgroundTint="#90EE90"
         android:textColor="#0a3711"
-        android:elevation="10dp"
+        android:elevation="20dp"
         android:text="로그인"
 
         tools:ignore="MissingConstraints"
@@ -47,7 +89,9 @@
         android:id="@+id/register"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="회원 가입"
+        android:text="서비스 이용이 처음이신가요 ?"
+        android:textSize="15dp"
+        android:elevation="20dp"
         android:linksClickable="true"
         android:autoLink="web"
         />

@@ -6,37 +6,87 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="내가 가입한 그룹">
-    </TextView>
+    <FrameLayout
+        android:orientation="horizontal"
+        android:layout_width="wrap_content"
+        android:layout_gravity="left"
+        android:layout_height="wrap_content">
+
+        <ImageView
+            android:layout_width="120dp"
+            android:layout_height="50dp"
+            android:src="@drawable/greenpaint"
+            android:layout_gravity="left"
+            android:alpha="50">
+
+        </ImageView>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="20dp"
+            android:layout_marginLeft="40dp"
+            android:layout_marginTop="10dp"
+            android:textStyle="bold"
+            android:elevation="20dp"
+            android:layout_gravity="left"
+            android:textColor="#007f2f"
+            android:text="내가 가입한 그룹">
+
+        </TextView>
+    </FrameLayout>
 
     <LinearLayout
         android:id="@+id/groupList"
         android:orientation="vertical"
         android:gravity="center"
         android:layout_weight="8"
+        android:background="@drawable/layout_background"
         android:layout_width="match_parent"
         android:layout_margin="5dp"
         android:padding="5dp"
         android:layout_height="wrap_content">
     </LinearLayout>
+    <FrameLayout
+        android:orientation="horizontal"
+        android:layout_width="wrap_content"
+        android:layout_gravity="left"
+        android:layout_height="wrap_content">
 
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="나의 달성률">
-    </TextView>
+        <ImageView
+            android:layout_width="120dp"
+            android:layout_height="50dp"
+            android:src="@drawable/greenpaint"
+            android:layout_gravity="left"
+            android:alpha="50">
+
+        </ImageView>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="20dp"
+            android:layout_marginLeft="40dp"
+            android:layout_marginTop="10dp"
+            android:textStyle="bold"
+            android:elevation="20dp"
+            android:layout_gravity="left"
+            android:textColor="#007f2f"
+            android:text="나의 달성률">
+
+        </TextView>
+    </FrameLayout>
     <LinearLayout
         android:id="@+id/mygoal"
         android:gravity="center"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="5dp"
+        android:background="@drawable/layout_background"
         android:padding="5dp"
         android:layout_weight="5"
-        android:orientation="vertical">
+        android:orientation="horizontal">
+
     </LinearLayout>
 
     <Button
@@ -44,14 +94,21 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:backgroundTint="#90EE90"
+        android:elevation="50dp"
         android:textColor="#0a3711"
         android:layout_weight="1"
+        android:textSize="20dp"
+        android:textStyle="bold"
         android:text="그룹 생성"></Button>
     <Button
         android:id="@+id/joinGroup"
         android:layout_width="match_parent"
+        android:elevation="50dp"
         android:backgroundTint="#90EE90"
         android:textColor="#0a3711"
+        android:textSize="20dp"
+        android:textStyle="bold"
+
         android:layout_height="wrap_content"
         android:layout_weight="1"
         android:text="그룹 참가"></Button>

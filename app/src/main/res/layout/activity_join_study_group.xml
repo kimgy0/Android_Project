@@ -25,9 +25,11 @@
     <EditText
         android:id="@+id/inviteKey"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="50dp"
         android:layout_marginLeft="20dp"
         android:layout_marginRight="20dp"
+        android:layout_marginBottom="20dp"
+        android:elevation="20dp"
         android:hint="방장이 만든 초대키를 입력해주세요."></EditText>
 
     <Button
@@ -37,6 +39,7 @@
         android:backgroundTint="#90EE90"
         android:textColor="#0a3711"
         android:layout_gravity="right"
+        android:elevation="20dp"
         android:layout_marginRight="55dp"
         android:text="방에 참여하기"></Button>
 

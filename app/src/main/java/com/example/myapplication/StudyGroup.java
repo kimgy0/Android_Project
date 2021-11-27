@@ -69,6 +69,7 @@ public class StudyGroup extends AppCompatActivity {
         server_url += key;
 
         try {
+
             jsonDto = new HttpUtilGet().execute(server_url, getIntent().getStringExtra("token")).get();
 
             if ((int) jsonDto.getHttpCode() != HttpsURLConnection.HTTP_OK) {
@@ -136,7 +137,7 @@ public class StudyGroup extends AppCompatActivity {
                             JsonDto jsonDeleteDto = new HttpUtilGet().execute(server_delete_url + key, jsonDto.getToken()).get();
                             if(jsonDeleteDto.getHttpCode() == HttpsURLConnection.HTTP_OK){
                                 Toast.makeText(getApplicationContext(),"탈퇴 되었습니다.",Toast.LENGTH_LONG);
-                                Intent intent = new Intent(getApplicationContext(),StudyGroup.class);
+                                Intent intent = new Intent(getApplicationContext(),StudyGroupMain.class);
                                 intent.putExtra("token", jsonDto.getToken());
                                 intent.putExtra("key", key);
                                 startActivity(intent);
