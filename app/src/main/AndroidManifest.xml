@@ -32,7 +32,7 @@
         <activity android:name=".WriteGroupInfo" />
         <activity android:name=".JoinStudyGroup" />
         <activity android:name=".StudyGroup" />
-
+        <activity android:name=".PictureSend"/>
         <provider
             android:authorities="com.example.myapplication"
             android:name="androidx.core.content.FileProvider"
@@ -42,14 +42,10 @@
 <!--            관련 문제에 대해서 구글링해 보니 android.support.v4.content.FileProvide
             r 대신 androidx.core.content.FileProvider 를 사용하라는 이야기가 있는 것 같아서 아래와 같이 수정하니
             unresolved class 오류가 해결된 것 같습니다.-->
-
-
             <meta-data
-                android:name="android.support.File_POVIDER_PATHS"
+                android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/file_paths"></meta-data>
 
         </provider>
-
     </application>
-
 </manifest>

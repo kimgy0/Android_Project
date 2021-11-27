@@ -48,7 +48,12 @@ public class HttpUtilGet extends AsyncTask<String, String, JsonDto> {
             JsonDto jsonInfo ;
 
 
-            jsonInfo = new JsonDto(code, res, conn.getHeaderField("Authorization"));
+            if(res == null){
+                jsonInfo = new JsonDto(code, null, conn.getHeaderField("Authorization"));
+            }else{
+                jsonInfo = new JsonDto(code, res, conn.getHeaderField("Authorization"));
+            }
+
             return jsonInfo;
 
         } catch (Exception e) {

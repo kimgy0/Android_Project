@@ -1,5 +1,6 @@
 package com.example.myapplication;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -12,6 +13,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.myapplication.dao.HttpUtilGet;
@@ -51,6 +53,8 @@ public class StudyGroup extends AppCompatActivity {
     int absent;
 
     String server_url = "http://15.165.219.73:2000/api/user/printInGroup/";
+    String server_delete_url = "http://15.165.219.73:2000/api/user/delete/";
+
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -108,8 +112,6 @@ public class StudyGroup extends AppCompatActivity {
                     }
                 });
             }
-
-
         } catch (InterruptedException e) {
             e.printStackTrace();
         } catch (ExecutionException e) {
@@ -118,6 +120,60 @@ public class StudyGroup extends AppCompatActivity {
             Toast.makeText(getApplicationContext(), e.getMessage(), Toast.LENGTH_LONG).show();
             e.printStackTrace();
         }
+
+        delete = findViewById(R.id.delete);
+        delete.setOnClickListener(new View.OnClickListener(){
+
+            @Override
+            public void onClick(View v) {
+                AlertDialog.Builder builder = new AlertDialog.Builder(StudyGroup.this);
+                builder.setTitle("정말로 탈퇴하실건가요?");;
+                builder.setPositiveButton("탈퇴하기", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+
+                        try {
+                            JsonDto jsonDeleteDto = new HttpUtilGet().execute(server_delete_url + key, jsonDto.getToken()).get();
+                            if(jsonDeleteDto.getHttpCode() == HttpsURLConnection.HTTP_OK){
+                                Toast.makeText(getApplicationContext(),"탈퇴 되었습니다.",Toast.LENGTH_LONG);
+                                Intent intent = new Intent(getApplicationContext(),StudyGroup.class);
+                                intent.putExtra("token", jsonDto.getToken());
+                                intent.putExtra("key", key);
+                                startActivity(intent);
+                            }else{
+                                Toast.makeText(getApplicationContext(),"비정상적인 탈퇴 접근입니다.",Toast.LENGTH_LONG);
+                                dialog.cancel();
+                            }
+                        } catch (ExecutionException e) {
+                            e.printStackTrace();
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                        finish();
+                    }
+                });
+                builder.setNegativeButton("취소", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.cancel();
+                    }
+                });
+                AlertDialog alertD = builder.create();
+                alertD.show();
+            }
+        });
+
+
+        pictureShot = findViewById(R.id.goToPicture);
+        pictureShot.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getApplicationContext(),PictureSend.class);
+                intent.putExtra("token", jsonDto.getToken());
+                intent.putExtra("key", key);
+                startActivity(intent);
+            }
+        });
     }
     public void addTextView(String a, LinearLayout l,boolean b){
         view = new TextView(this);
