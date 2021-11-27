@@ -47,5 +47,6 @@
                 android:resource="@xml/file_paths"></meta-data>
 
         </provider>
+        <receiver android:name=".alarm.Alarm"></receiver>
     </application>
 </manifest>

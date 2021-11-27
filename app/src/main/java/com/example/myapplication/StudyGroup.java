@@ -1,8 +1,11 @@
 package com.example.myapplication;
 
+import android.app.AlarmManager;
+import android.app.PendingIntent;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.Gravity;
 import android.view.View;
@@ -16,6 +19,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.myapplication.alarm.Alarm;
 import com.example.myapplication.dao.HttpUtilGet;
 import com.example.myapplication.dto.json.JsonDto;
 
@@ -24,6 +28,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.w3c.dom.Text;
 
+import java.util.Calendar;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 import java.util.stream.Collectors;
@@ -41,6 +46,9 @@ public class StudyGroup extends AppCompatActivity {
 
     LinearLayout userList;
 
+
+    Button alarm;
+    Button noAlarm;
     Button delete;
     Button pictureShot;
     Button modify;
@@ -50,10 +58,18 @@ public class StudyGroup extends AppCompatActivity {
 
     String key;
     int tardy;
+    int hour;
+    int minute;
     int absent;
 
     String server_url = "http://15.165.219.73:2000/api/user/printInGroup/";
     String server_delete_url = "http://15.165.219.73:2000/api/user/delete/";
+    String server_alarm_url = "http://15.165.219.73:2000/api/user/alarm/";
+
+    Intent alarmIntent;
+    private AlarmManager alarmManager;
+
+
 
 
     @Override
@@ -67,6 +83,13 @@ public class StudyGroup extends AppCompatActivity {
         groupName = findViewById(R.id.in_groupName);
         comment = findViewById(R.id.in_groupComment);
         server_url += key;
+
+        alarm = findViewById(R.id.alarm);
+        noAlarm = findViewById(R.id.noAlarm);
+
+        if(alarmManager == null){
+            noAlarm.setEnabled(false);
+        }
 
         try {
 
@@ -98,15 +121,19 @@ public class StudyGroup extends AppCompatActivity {
                 Toast.makeText(getApplicationContext(), collect.toString(), Toast.LENGTH_LONG).show();
 
                 collect.forEach(item -> {
+                    Intent alarmIntent = new Intent(getApplicationContext(),Alarm.class);
+                    PendingIntent pIntent = PendingIntent.getBroadcast(getApplicationContext(), 0,alarmIntent, 0);
                     try {
-                        // checksum of absent and tardy for find user
-                        if(item.getBoolean("checkMe") == true){
-                            absent = item.getInt("absent");
-                            tardy = item.getInt("tardy");
-                            absentAndTardy.setText("나의 지각 횟수는" + tardy +"회 이며\n"+" 그로 인한 결석 횟수는" + absent + " 회 입니다.");
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                            hour = item.getInt("hour");
+                            minute = item.getInt("minute");
                         }
-                        //user list
-                        addTextView(item.getLong("userId")+"  "+item.getString("username"),userList,item.getBoolean("master"));
+                        Calendar calendar = Calendar.getInstance();
+                        calendar.set(Calendar.HOUR_OF_DAY, hour);
+                        calendar.set(Calendar.MINUTE, minute);
+                        calendar.set(Calendar.SECOND, 0);
+                        calendar.set(Calendar.MILLISECOND, 0);
+                        alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(),  AlarmManager.INTERVAL_DAY, pIntent);
 
                     } catch (Exception e) {
                         e.printStackTrace();
@@ -121,6 +148,73 @@ public class StudyGroup extends AppCompatActivity {
             Toast.makeText(getApplicationContext(), e.getMessage(), Toast.LENGTH_LONG).show();
             e.printStackTrace();
         }
+
+
+
+        alarm.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v) {
+                if(alarmManager != null){
+                    noAlarm.setEnabled(true);
+
+                    try {
+                        jsonDto = new HttpUtilGet().execute(server_alarm_url, getIntent().getStringExtra("token")).get();
+                        if ((int) jsonDto.getHttpCode() != HttpsURLConnection.HTTP_OK) {
+                            parsing = new JSONObject(jsonDto.getJson());
+                            String errorField = parsing.getString("errorField");
+                            String errorMessages = parsing.getString("errorMessages");
+                            Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+                            Toast.makeText(getApplicationContext(), errorField + errorMessages, Toast.LENGTH_LONG).show();
+                            startActivity(intent);
+                        } else {
+                            parsing = new JSONObject(jsonDto.getJson());
+                            parsing.getJSONArray("alarms");
+                            List<JSONObject> collect = IntStream.range(0, jsonArray.length()).mapToObj(index -> {
+                                try {
+                                    return (JSONObject) jsonArray.get(index);
+                                } catch (JSONException e) {
+                                    e.printStackTrace();
+                                }
+                                return null;
+                            }).collect(Collectors.toList());
+
+                            collect.forEach(item -> {
+                                try {
+                                    // checksum of absent and tardy for find user
+                                    if(item.getBoolean("checkMe") == true){
+                                        absent = item.getInt("absent");
+                                        tardy = item.getInt("tardy");
+                                        absentAndTardy.setText("나의 지각 횟수는" + tardy +"회 이며\n"+" 그로 인한 결석 횟수는" + absent + " 회 입니다.");
+                                    }
+                                    //user list
+                                    addTextView(item.getLong("userId")+"  "+item.getString("username"),userList,item.getBoolean("master"));
+
+                                } catch (Exception e) {
+                                    e.printStackTrace();
+                                }
+                            });
+                        }
+                    } catch (ExecutionException e) {
+                        e.printStackTrace();
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        });
+
+
+
+        noAlarm.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                alarmIntent = new Intent(getApplicationContext(), Alarm.class);
+                PendingIntent pIntent = PendingIntent.getBroadcast(getApplicationContext(), 0, alarmIntent, 0);
+                alarmManager.cancel(pIntent);
+            }
+        });
 
         delete = findViewById(R.id.delete);
         delete.setOnClickListener(new View.OnClickListener(){

@@ -1,6 +1,9 @@
 package com.example.myapplication;
 
+import android.app.AlarmManager;
+import android.app.PendingIntent;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -9,8 +12,11 @@ import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.myapplication.alarm.Alarm;
 import com.example.myapplication.dao.HttpUtil;
 import com.example.myapplication.dto.json.JsonDto;
 
@@ -18,8 +24,12 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Collection;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
+import java.util.ListIterator;
 import java.util.Map;
 
 import javax.net.ssl.HttpsURLConnection;
@@ -41,6 +51,11 @@ public class WriteGroupInfo extends AppCompatActivity {
     private String Minute;
 
 
+    private AlarmManager alarmManager;
+
+
+    private int alarmHour;
+    private int alarmMinute;
 
 
     @Override
@@ -50,6 +65,8 @@ public class WriteGroupInfo extends AppCompatActivity {
 
         List<Map<String,String>> list = new ArrayList<>();
         Map<String,String> map = new HashMap<>();
+        List<Integer> alarmHourTemp = new ArrayList<>();
+        List<Integer> alarmMinuteTemp = new ArrayList<>();
         JSONObject jsonObject = new JSONObject();
 
 
@@ -69,6 +86,7 @@ public class WriteGroupInfo extends AppCompatActivity {
                     if (list.size() > 9 ){
                         Toast.makeText(getApplicationContext(), "열개 이상은 등록이 불가능합니다.", Toast.LENGTH_LONG).show();
                     }else{
+
                         if(timePicker.getHour() < 10){
                             Hour = 0+String.valueOf(timePicker.getHour());
                         }else{
@@ -79,6 +97,10 @@ public class WriteGroupInfo extends AppCompatActivity {
                         }else{
                             Minute = String.valueOf(timePicker.getMinute());
                         }
+
+                        alarmHourTemp.add(timePicker.getHour());
+                        alarmMinuteTemp.add(timePicker.getMinute());
+
                         timeText.setText(timeText.getText().toString()+"   "+Hour+":"+Minute);
                         map.put("localTime",Hour+":"+Minute);
                         list.add(map);
@@ -108,6 +130,23 @@ public class WriteGroupInfo extends AppCompatActivity {
                             json = jsonObject.toString();
                             JsonDto jsonDto = new HttpUtil().execute(server_url, json,getIntent().getStringExtra("token")).get();
                             Toast.makeText(getApplicationContext(), json, Toast.LENGTH_LONG).show();
+
+                            Intent alarmIntent = new Intent(getApplicationContext(),Alarm.class);
+                            PendingIntent pIntent = PendingIntent.getBroadcast(getApplicationContext(), 0,alarmIntent, 0);
+
+
+                            for(int i=0; i<map.size(); i++){
+                                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                                    alarmHour = alarmHourTemp.get(i);
+                                    alarmMinute = alarmMinuteTemp.get(i);
+                                }
+                                Calendar calendar = Calendar.getInstance();
+                                calendar.set(Calendar.HOUR_OF_DAY, alarmHour);
+                                calendar.set(Calendar.MINUTE, alarmMinute);
+                                calendar.set(Calendar.SECOND, 0);
+                                calendar.set(Calendar.MILLISECOND, 0);
+                                alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(),  AlarmManager.INTERVAL_DAY, pIntent);
+                            }
 
 
                             if(jsonDto.getHttpCode() != HttpsURLConnection.HTTP_OK){

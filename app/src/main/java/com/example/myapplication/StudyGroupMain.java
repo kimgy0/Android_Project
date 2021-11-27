@@ -84,6 +84,11 @@ public class StudyGroupMain extends AppCompatActivity {
                     } return null;
                 }).collect(Collectors.toList());
 
+                if (jsonItem.size() !=0){
+                    ((ViewGroup) findViewById(R.id.exist1).getParent()).removeView(findViewById(R.id.exist1));
+                    ((ViewGroup) findViewById(R.id.exist2).getParent()).removeView(findViewById(R.id.exist2));
+                }
+
 
                 jsonItem.forEach( item -> {
                     try {
@@ -101,8 +106,11 @@ public class StudyGroupMain extends AppCompatActivity {
                         e.printStackTrace();
                     }
                 });
+                if(jsonItem.size() !=0){
+                    addTextView("나의 지각 횟수는 " + tardy +"회 이며 \n"+" 그로 인한 결석 횟수는 " + absent + " 회 입니다.", myGoal, null);
+                }else{
 
-                addTextView("나의 지각 횟수는 " + tardy +"회 이며 \n"+" 그로 인한 결석 횟수는 " + absent + " 회 입니다.", myGoal, null);
+                }
 
             }
         }catch(Exception e){

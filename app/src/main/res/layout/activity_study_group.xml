@@ -116,21 +116,38 @@
 <!--            android:gravity="center"-->
 <!--            android:layout_marginLeft="20dp">-->
 <!--        </TextView>-->
-        <Button
-            android:layout_marginLeft="25dp"
-            android:layout_marginRight="25dp"
-            android:layout_width="match_parent"
+        <LinearLayout
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="그룹 수정"
-            android:enabled="false"
-            >
-        </Button>
+            android:layout_gravity="center"
+            android:orientation="horizontal">
+            <Button
+                android:id="@+id/alarm"
+                android:layout_marginLeft="25dp"
+                android:layout_marginRight="10dp"
+                android:layout_width="165dp"
+                android:backgroundTint="#90EE90"
+                android:layout_height="wrap_content"
+                android:textColor="#0a3711"
+                android:text="알림 받기"/>
+
+            <Button
+                android:id="@+id/noAlarm"
+                android:layout_marginRight="25dp"
+                android:layout_width="165dp"
+                android:backgroundTint="#90EE90"
+                android:layout_height="wrap_content"
+                android:textColor="#0a3711"
+                android:text="알림 끄기"/>
+
+
+        </LinearLayout>
         <Button
             android:id="@+id/delete"
             android:layout_marginLeft="25dp"
             android:layout_marginRight="25dp"
             android:backgroundTint="#90EE90"
-            android:textColor="#0a3711"
+            android:textColor="#8d192b"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="탈퇴하기">
