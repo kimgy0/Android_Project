@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">My Application</string>
+    <string name="app_name">그:숲</string>
     <string name="joinGroupString"> <u> 초대 받지 못하셨나요?</u>  \n &#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160; <u>그럼 그룹을 만들어보세요!</u> </string>
     <string name="pictureInquire"> <u>> 그룹원 인증사진 보러가기</u></string>
 </resources>

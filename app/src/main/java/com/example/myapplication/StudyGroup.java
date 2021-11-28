@@ -2,10 +2,10 @@ package com.example.myapplication;
 
 import android.app.AlarmManager;
 import android.app.PendingIntent;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
-import android.os.Build;
 import android.os.Bundle;
 import android.view.Gravity;
 import android.view.View;
@@ -26,11 +26,11 @@ import com.example.myapplication.dto.json.JsonDto;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.w3c.dom.Text;
 
 import java.util.Calendar;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -66,9 +66,11 @@ public class StudyGroup extends AppCompatActivity {
     String server_delete_url = "http://15.165.219.73:2000/api/user/delete/";
     String server_alarm_url = "http://15.165.219.73:2000/api/user/alarm/";
 
-    Intent alarmIntent;
+    private Intent alarmIntent;
     private AlarmManager alarmManager;
 
+    private Calendar calendar;
+    int i = 0;
 
 
 
@@ -83,9 +85,12 @@ public class StudyGroup extends AppCompatActivity {
         groupName = findViewById(R.id.in_groupName);
         comment = findViewById(R.id.in_groupComment);
         server_url += key;
+        server_alarm_url+=key;
 
         alarm = findViewById(R.id.alarm);
         noAlarm = findViewById(R.id.noAlarm);
+
+
 
         if(alarmManager == null){
             noAlarm.setEnabled(false);
@@ -148,63 +153,72 @@ public class StudyGroup extends AppCompatActivity {
         alarm.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v) {
-//                if(alarmManager != null){
-//                    noAlarm.setEnabled(true);
-//
-//                    try {
-//                        jsonDto = new HttpUtilGet().execute(server_alarm_url, getIntent().getStringExtra("token")).get();
-//                        if ((int) jsonDto.getHttpCode() != HttpsURLConnection.HTTP_OK) {
-//                            parsing = new JSONObject(jsonDto.getJson());
-//                            String errorField = parsing.getString("errorField");
-//                            String errorMessages = parsing.getString("errorMessages");
-//                            Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-//                            Toast.makeText(getApplicationContext(), errorField + errorMessages, Toast.LENGTH_LONG).show();
-//                            startActivity(intent);
-//                        } else {
-//                            parsing = new JSONObject(jsonDto.getJson());
-//                            parsing.getJSONArray("data");
-//                            List<JSONObject> collect = IntStream.range(0, jsonArray.length()).mapToObj(index -> {
-//                                try {
-//                                    return (JSONObject) jsonArray.get(index);
-//                                } catch (JSONException e) {
-//                                    e.printStackTrace();
-//                                }
-//                                return null;
-//                            }).collect(Collectors.toList());
-//
-//                            collect.forEach(item -> {
-//                                try {
-//                                    hour=item.getInt("hour");
-//                                    minute=item.getInt("minute");
-//                                } catch (JSONException e) {
-//                                    e.printStackTrace();
-//                                }
-//
-//                                Intent alarmIntent = new Intent(getApplicationContext(),Alarm.class);
-//                                PendingIntent pIntent = PendingIntent.getBroadcast(getApplicationContext(), 0,alarmIntent, 0);
-//
-//                                Calendar calendar = Calendar.getInstance();
-//                                calendar.set(Calendar.HOUR_OF_DAY, hour);
-//                                calendar.set(Calendar.MINUTE, minute);
-//                                calendar.set(Calendar.SECOND, 0);
-//                                calendar.set(Calendar.MILLISECOND, 0);
-//                                alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(),  AlarmManager.INTERVAL_DAY, pIntent);
-//
-//                            });
-//
-//
-//                            collect.forEach(item -> {
-//
-//                            });
-//                        }
-//                    } catch (ExecutionException e) {
-//                        e.printStackTrace();
-//                    } catch (InterruptedException e) {
-//                        e.printStackTrace();
-//                    } catch (JSONException e) {
-//                        e.printStackTrace();
-//                    }
-//                }
+                try {
+                    jsonDto = new HttpUtilGet().execute(server_alarm_url, getIntent().getStringExtra("token")).get();
+                    if ((int) jsonDto.getHttpCode() != HttpsURLConnection.HTTP_OK) {
+                        Toast.makeText(getApplicationContext(), "ㅆㅂ", Toast.LENGTH_LONG).show();
+                        parsing = new JSONObject(jsonDto.getJson());
+                        String errorField = parsing.getString("errorField");
+                        String errorMessages = parsing.getString("errorMessages");
+                        Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+
+                        Toast.makeText(getApplicationContext(), errorField + errorMessages, Toast.LENGTH_LONG).show();
+                        startActivity(intent);
+                    } else {
+
+
+                        parsing = new JSONObject(jsonDto.getJson());
+                        JSONArray data = parsing.getJSONArray("data");
+                        List<JSONObject> collect = IntStream.range(0, data.length()).mapToObj(index -> {
+                            try {
+                                return (JSONObject) data.get(index);
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+                            return null;
+                        }).collect(Collectors.toList());
+
+                        collect.forEach(item -> {
+                            try {
+                                hour=item.getInt("hour");
+                                minute=item.getInt("minute");
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+                            calendar = Calendar.getInstance();
+                            calendar.setTimeInMillis(System.currentTimeMillis());
+
+                            if (calendar.before(Calendar.getInstance())) {
+                                calendar.add(Calendar.DATE, 1);
+                            }
+
+                            calendar.set(Calendar.HOUR_OF_DAY, hour);
+                            calendar.set(Calendar.MINUTE, minute);
+                            calendar.set(Calendar.SECOND, 0);
+                            calendar.set(Calendar.MILLISECOND, 0);
+
+                            alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+                            Intent AlarmIntent = new Intent(getApplicationContext(), Alarm.class);
+                            PendingIntent pIntent = PendingIntent.getBroadcast(getApplicationContext(), i, AlarmIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+                            i++;
+
+                            alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(),AlarmManager.INTERVAL_DAY, pIntent);
+
+                        });
+                        Toast.makeText(getApplicationContext(),"알람 변경이 완료되었어요!",Toast.LENGTH_LONG).show();
+                    }
+                } catch (ExecutionException e) {
+                    e.printStackTrace();
+                    Toast.makeText(getApplicationContext(), e.getMessage(), Toast.LENGTH_LONG).show();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                    Toast.makeText(getApplicationContext(), e.getMessage(), Toast.LENGTH_LONG).show();
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                    Toast.makeText(getApplicationContext(), e.getMessage(), Toast.LENGTH_LONG).show();
+                }
+
+
             }
         });
 
@@ -213,9 +227,13 @@ public class StudyGroup extends AppCompatActivity {
         noAlarm.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                alarmIntent = new Intent(getApplicationContext(), Alarm.class);
-//                PendingIntent pIntent = PendingIntent.getBroadcast(getApplicationContext(), 0, alarmIntent, 0);
-//                alarmManager.cancel(pIntent);
+
+                for(int i = 0; i<10; i++){
+                    alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+                    Intent AlarmIntent = new Intent(getApplicationContext(), Alarm.class);
+                    PendingIntent cancelIntent=PendingIntent.getBroadcast(getApplicationContext(), i, AlarmIntent,PendingIntent.FLAG_UPDATE_CURRENT);
+                    alarmManager.cancel(cancelIntent);
+                }
             }
         });
 

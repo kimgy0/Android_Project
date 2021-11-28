@@ -138,7 +138,6 @@ public class WriteGroupInfo extends AppCompatActivity {
 
                             json = jsonObject.toString();
                             JsonDto jsonDto = new HttpUtil().execute(server_url, json,getIntent().getStringExtra("token")).get();
-                            Toast.makeText(getApplicationContext(), json, Toast.LENGTH_LONG).show();
 
 
                             for(int i=0; i<list.size(); i++){
@@ -160,11 +159,9 @@ public class WriteGroupInfo extends AppCompatActivity {
                                 alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
                                 Intent AlarmIntent = new Intent(getApplicationContext(), Alarm.class);
                                 PendingIntent pIntent = PendingIntent.getBroadcast(getApplicationContext(), i, AlarmIntent, PendingIntent.FLAG_UPDATE_CURRENT);
-//
-
-
                                 alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(),AlarmManager.INTERVAL_DAY, pIntent);
                             }
+                            Toast.makeText(getApplicationContext(), "알람설정 완료", Toast.LENGTH_LONG).show();
 
 
 
@@ -173,6 +170,7 @@ public class WriteGroupInfo extends AppCompatActivity {
                                 String errorField = parsing.getString("errorField");
                                 String errorMessages = parsing.getString("errorMessages");
                                 textView.setText(errorMessages);
+                                Toast.makeText(getApplicationContext(), "네트워크 연결을 확인해주세요.", Toast.LENGTH_LONG).show();
                             }else {
 
                                 Intent intent = new Intent(getApplicationContext(),StudyGroupMain.class);

@@ -59,20 +59,11 @@ public class PictureSend extends AppCompatActivity {
 
 
         findViewById(R.id.btn_send).setOnClickListener(new View.OnClickListener() {
-                                                           @Override
-                                                           public void onClick(View v) {
+            @Override
+            public void onClick(View v) {
 
-
-                        /*
-        strings[0] = server_url;
-        strings[1] = filepath
-        strings[2] = groupId
-        strings[3] = token
-         */
-
-
-                                                           }
-                                                       });
+            }
+        });
 
 
         findViewById(R.id.btn_capture).setOnClickListener(new View.OnClickListener() {
@@ -88,13 +79,10 @@ public class PictureSend extends AppCompatActivity {
                     Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
                     if(getApplicationContext().getPackageManager().hasSystemFeature(PackageManager.FEATURE_CAMERA)){
                         photoFile = null;
-                        Toast.makeText(getApplicationContext(), "파일을 만들기 전입니다..",Toast.LENGTH_SHORT).show();
                         photoFile = createImageFile();
-                        Toast.makeText(getApplicationContext(), "파일을 만들었습니다.",Toast.LENGTH_SHORT).show();
                         if(photoFile != null){
                             photoUri = FileProvider.getUriForFile(getApplicationContext(),getPackageName(), photoFile);
                             intent.putExtra(MediaStore.EXTRA_OUTPUT, photoUri);
-                            Toast.makeText(getApplicationContext(), "카메라로 이동합니다.",Toast.LENGTH_SHORT).show();
                             startActivityForResult(intent,REQUEST_IMAGE_CAPTURE);
                             // startActivityForResult 는 다음 인텐트로 화면전환이 일어났을 때 다음 액티비티로부터 값을 다시 가져옴.
                             // startActivityForResult 이것만 쓰면 안되고 밑에 구현해야함.
@@ -165,7 +153,6 @@ public class PictureSend extends AppCompatActivity {
     private File createImageFile() {
         //String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
         String timeStamp = LocalDateTime.now().toString();
-        Toast.makeText(getApplicationContext(), "메서드 진입",Toast.LENGTH_SHORT).show();
         //이미지파일 이름을 년월일 시간단위로 생성해서 중복해서 생성되지 않도록!
         String imageFileName = "TEST_"+timeStamp+"_";
         File storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);

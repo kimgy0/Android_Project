@@ -28,11 +28,15 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginRight="30dp"
+            android:backgroundTint="#90EE90"
+            android:textColor="#0a3711"
             android:text="촬영"></Button>
 
         <Button
             android:id="@+id/btn_send"
             android:layout_width="wrap_content"
+            android:textColor="#0a3711"
+            android:backgroundTint="#90EE90"
             android:layout_height="wrap_content"
             android:layout_marginLeft="30dp"
             android:text="전송"></Button>
