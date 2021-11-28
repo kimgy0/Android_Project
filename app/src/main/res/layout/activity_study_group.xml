@@ -6,14 +6,36 @@
     android:padding="10dp"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
-    <TextView
-        android:id="@+id/in_groupName"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="그룹"
-        android:layout_marginLeft="20dp"
-        android:textSize="40dp">
-    </TextView>
+    <FrameLayout
+        android:orientation="horizontal"
+        android:layout_width="wrap_content"
+        android:layout_gravity="left"
+        android:layout_height="wrap_content">
+
+        <ImageView
+            android:layout_width="120dp"
+            android:layout_height="50dp"
+            android:src="@drawable/greenpaint"
+            android:layout_gravity="left"
+            android:alpha="50">
+
+        </ImageView>
+
+        <TextView
+            android:id="@+id/in_groupName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="20dp"
+            android:layout_marginLeft="40dp"
+            android:layout_marginTop="10dp"
+            android:textStyle="bold"
+            android:elevation="20dp"
+            android:layout_gravity="left"
+            android:textColor="#007f2f"
+            android:text="그룹">
+
+        </TextView>
+    </FrameLayout>
     <TextView
         android:id="@+id/in_groupComment"
         android:layout_width="match_parent"

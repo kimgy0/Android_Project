@@ -61,7 +61,6 @@ public class StudyGroupMain extends AppCompatActivity {
 
 
         try {
-            Toast.makeText(getApplicationContext(), server_url+getIntent().getStringExtra("token"), Toast.LENGTH_LONG).show();
             jsonDto = new HttpUtilGet().execute(server_url, getIntent().getStringExtra("token")).get();
             if ((int) jsonDto.getHttpCode() != HttpsURLConnection.HTTP_OK) {
                 parsing = new JSONObject(jsonDto.getJson());

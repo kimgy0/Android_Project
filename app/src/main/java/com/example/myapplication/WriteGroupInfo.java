@@ -2,10 +2,13 @@ package com.example.myapplication;
 
 import android.app.AlarmManager;
 import android.app.PendingIntent;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
+import android.webkit.HttpAuthHandler;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -14,7 +17,9 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 
 import com.example.myapplication.alarm.Alarm;
 import com.example.myapplication.dao.HttpUtil;
@@ -31,6 +36,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.Map;
+import java.util.Random;
+import java.util.UUID;
 
 import javax.net.ssl.HttpsURLConnection;
 
@@ -50,25 +57,23 @@ public class WriteGroupInfo extends AppCompatActivity {
     private String Hour;
     private String Minute;
 
-
-    private AlarmManager alarmManager;
-
+    private Calendar calendar;
 
     private int alarmHour;
     private int alarmMinute;
 
+    private AlarmManager alarmManager;
 
+    @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_study_group);
 
         List<Map<String,String>> list = new ArrayList<>();
-        Map<String,String> map = new HashMap<>();
         List<Integer> alarmHourTemp = new ArrayList<>();
         List<Integer> alarmMinuteTemp = new ArrayList<>();
         JSONObject jsonObject = new JSONObject();
-
 
         textView = findViewById(R.id.error);
         addTimeButton = findViewById(R.id.time_picker_add);
@@ -78,7 +83,10 @@ public class WriteGroupInfo extends AppCompatActivity {
         groupName = findViewById(R.id.subject);
         comment = findViewById(R.id.comment);
 
+
+
         timePicker.setIs24HourView(true);
+
         addTimeButton.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v) {
@@ -102,6 +110,7 @@ public class WriteGroupInfo extends AppCompatActivity {
                         alarmMinuteTemp.add(timePicker.getMinute());
 
                         timeText.setText(timeText.getText().toString()+"   "+Hour+":"+Minute);
+                        Map<String,String> map = new HashMap<>();
                         map.put("localTime",Hour+":"+Minute);
                         list.add(map);
                     }
@@ -131,22 +140,32 @@ public class WriteGroupInfo extends AppCompatActivity {
                             JsonDto jsonDto = new HttpUtil().execute(server_url, json,getIntent().getStringExtra("token")).get();
                             Toast.makeText(getApplicationContext(), json, Toast.LENGTH_LONG).show();
 
-                            Intent alarmIntent = new Intent(getApplicationContext(),Alarm.class);
-                            PendingIntent pIntent = PendingIntent.getBroadcast(getApplicationContext(), 0,alarmIntent, 0);
 
+                            for(int i=0; i<list.size(); i++){
+                                alarmHour = alarmHourTemp.get(i);
+                                alarmMinute = alarmMinuteTemp.get(i);
 
-                            for(int i=0; i<map.size(); i++){
-                                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                                    alarmHour = alarmHourTemp.get(i);
-                                    alarmMinute = alarmMinuteTemp.get(i);
+                                calendar = Calendar.getInstance();
+                                calendar.setTimeInMillis(System.currentTimeMillis());
+
+                                if (calendar.before(Calendar.getInstance())) {
+                                    calendar.add(Calendar.DATE, 1);
                                 }
-                                Calendar calendar = Calendar.getInstance();
+
                                 calendar.set(Calendar.HOUR_OF_DAY, alarmHour);
                                 calendar.set(Calendar.MINUTE, alarmMinute);
                                 calendar.set(Calendar.SECOND, 0);
                                 calendar.set(Calendar.MILLISECOND, 0);
-                                alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(),  AlarmManager.INTERVAL_DAY, pIntent);
+
+                                alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+                                Intent AlarmIntent = new Intent(getApplicationContext(), Alarm.class);
+                                PendingIntent pIntent = PendingIntent.getBroadcast(getApplicationContext(), i, AlarmIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+//
+
+
+                                alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(),AlarmManager.INTERVAL_DAY, pIntent);
                             }
+
 
 
                             if(jsonDto.getHttpCode() != HttpsURLConnection.HTTP_OK){
