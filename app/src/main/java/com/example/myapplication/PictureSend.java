@@ -7,13 +7,12 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
 import android.media.ExifInterface;
-import android.media.Image;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.view.View;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.Toast;
 
@@ -24,19 +23,25 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.core.content.FileProvider;
 
-import com.example.myapplication.R;
-import com.example.myapplication.dao.HttpUtil;
-import com.example.myapplication.dao.HttpUtilMultiPart;
 import com.gun0912.tedpermission.PermissionListener;
 import com.gun0912.tedpermission.TedPermission;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
-import java.text.SimpleDateFormat;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
+import java.io.PrintWriter;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.net.URLConnection;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Date;
-import java.util.concurrent.ExecutionException;
 
 public class PictureSend extends AppCompatActivity {
 
@@ -58,10 +63,24 @@ public class PictureSend extends AppCompatActivity {
                 .setPermissions(Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.CAMERA);
 
 
+
+
+
+
+
         findViewById(R.id.btn_send).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                if(photoFile == null){
+                    Toast.makeText(getApplicationContext(),"사진이 존재하지 않네요.",Toast.LENGTH_LONG);
+                }else{
+                    HttpMultipart(photoFile);
+                    Toast.makeText(getApplicationContext(),"사진 전송 완료",Toast.LENGTH_LONG);
+                    Intent intent = new Intent(getApplicationContext(),PictureSend.class);
+                    intent.putExtra("token", getIntent().getStringExtra("token"));
+                    intent.putExtra("key", getIntent().getStringExtra("key"));
+                    startActivity(intent);
+                }
             }
         });
 
@@ -197,4 +216,107 @@ public class PictureSend extends AppCompatActivity {
             Toast.makeText(getApplicationContext(), "권한 거부됨",Toast.LENGTH_SHORT).show();
         }
     };
+
+
+
+
+    private void HttpMultipart(File file) {
+       new AsyncTask<Void, Void, JSONObject>(){
+           @Override
+           protected JSONObject doInBackground(Void... voids) {
+               String boundary = "^-----^";
+               String LINE_FEED = "\r\n";
+               String charset = "UTF-8";
+               OutputStream outputStream;
+               PrintWriter writer;
+
+               JSONObject result = null;
+
+
+               try {
+                   URL url = new URL(server_url);
+                   HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+
+                   connection.setRequestProperty("Content-Type", "multipart/form-data;charset=utf-8;boundary=" + boundary);
+                   connection.setRequestProperty("Authorization", getIntent().getStringExtra("token"));
+                   connection.setRequestMethod("POST");
+                   connection.setDoInput(true);
+                   connection.setDoOutput(true);
+                   connection.setUseCaches(false);
+                   connection.setConnectTimeout(15000);
+
+                   outputStream = connection.getOutputStream();
+                   writer = new PrintWriter(new OutputStreamWriter(outputStream, charset), true);
+
+                   writer.append("--" + boundary).append(LINE_FEED);
+                   writer.append("Content-Disposition: form-data; name=\"groupId\"").append(LINE_FEED);
+                   writer.append("Content-Type: text/plain; charset=" + charset).append(LINE_FEED);
+                   writer.append(LINE_FEED);
+                   writer.append(getIntent().getStringExtra("key")).append(LINE_FEED);
+                   writer.flush();
+
+                   writer.append("--" + boundary).append(LINE_FEED);
+                   writer.append("Content-Disposition: form-data; name=\"imageFile\"; filename=\"" + file.getName() + "\"").append(LINE_FEED);
+                   writer.append("Content-Type: " + URLConnection.guessContentTypeFromName(file.getName())).append(LINE_FEED);
+                   writer.append("Content-Transfer-Encoding: binary").append(LINE_FEED);
+                   writer.append(LINE_FEED);
+                   writer.flush();
+
+                   FileInputStream inputStream = new FileInputStream(file);
+                   byte[] buffer = new byte[(int) file.length()];
+                   int bytesRead = -1;
+                   while ((bytesRead = inputStream.read(buffer)) != -1) {
+                       outputStream.write(buffer, 0, bytesRead);
+                   }
+                   outputStream.flush();
+                   inputStream.close();
+                   writer.append(LINE_FEED);
+                   writer.flush();
+
+                   writer.append("--" + boundary + "--").append(LINE_FEED);
+                   writer.close();
+
+
+                   int responseCode = connection.getResponseCode();
+                   if (responseCode == HttpURLConnection.HTTP_OK || responseCode == HttpURLConnection.HTTP_CREATED) {
+                       BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+                       String inputLine;
+                       StringBuffer response = new StringBuffer();
+                       while ((inputLine = in.readLine()) != null) {
+                           response.append(inputLine);
+                       }
+                       in.close();
+                       try {
+                           result = new JSONObject(response.toString());
+
+                       } catch (JSONException e) {
+                           e.printStackTrace();
+                       }
+
+                   } else {
+                       BufferedReader in = new BufferedReader(new InputStreamReader(connection.getErrorStream()));
+                       String inputLine;
+                       StringBuffer response = new StringBuffer();
+                       while ((inputLine = in.readLine()) != null) {
+                           response.append(inputLine);
+                       }
+                       in.close();
+                       result = new JSONObject(response.toString());
+
+                   }
+               } catch (Exception e) {
+                   e.printStackTrace();
+               }
+               return result;
+           }
+
+           @Override
+           protected void onPostExecute(JSONObject jsonObject) {
+               super.onPostExecute(jsonObject);
+           }
+       }.execute();
+    }
+
+
+
 }
